@@ -1,51 +1,15 @@
-// 1. Yapılandırma
+// ==========================================
+// 1. YAPILANDIRMA VE DEĞİŞKENLER
+// ==========================================
 const SHEET_ID = '1_rzNiHjjiacM8cIfsc5m777B96M08EW8eDDyaQmKXng';
 const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+const IMGBB_API_KEY = 'b58dfab5d3cbb564f3ab93c8a36e93b4';
 
 let basket = [];
 
-
-
-
-
-// 2. Google Sheets'ten Veri Çekme
-//async function loadServices() {
-  //  try {
-   //     const res = await fetch(URL);
-   //     const text = await res.text();
-        // Google'ın JSON formatındaki gereksiz başlığı temizliyoruz
-      //  const json = JSON.parse(text.substr(47).slice(0, -2));
-      //  const rows = json.table.rows;
-        
-    //    const container = document.getElementById('services-grid');
-    //    if (!container) return;
-        
-     //   container.innerHTML = '';
-//
-     //   rows.forEach((row, i) => {
-        //    if(i === 0) return; // Başlık satırını atla
-            
-        //   const name = row.c[0] ? row.c[0].v : "Service";
-      //      const price = row.c[1] ? row.c[1].v : 0;
-        //    const desc = row.c[2] ? row.c[2].v : "";
-
-            // HTML oluştururken isimdeki tek tırnakları kaçırıyoruz (escaping)
-         //   const safeName = name.replace(/'/g, "\\'");
-
-            //container.innerHTML += `
-              //  <div class="card">
-                //    <h3>${name}</h3>
-                   // <p style="font-size:0.8rem; margin:10px 0;">${desc}</p>
-                 //   <div class="price">£${price}</div>
-                 //   <button class="btn" onclick="addToCart('${safeName}', ${price})">Add to Cart</button>
-              //  </div>`;
-      //  });
-   // } catch (e) {
-      //  console.error("Hizmetler yüklenirken hata oluştu:", e);
-      //  document.getElementById('services-grid').innerHTML = "Failed to load services.";
-   // }
-//} 
-
+// ==========================================
+// 2. GOOGLE SHEETS'TEN VERİ ÇEKME
+// ==========================================
 async function loadServices() {
     try {
         const res = await fetch(URL);
@@ -58,44 +22,40 @@ async function loadServices() {
         container.innerHTML = '';
 
         rows.forEach((row, i) => {
-            if(i === 0) return; 
+            // 1. İlk satır başlık ise atla (Opsiyonel: i === 0 ise return diyebilirsin)
+           // if (i === 0) return;
 
-           // ... döngü içindeki kısım ...
-const name = row.c[0] ? row.c[0].v : "Service";
-const price = row.c[1] ? row.c[1].v : 0;
-const desc = row.c[2] ? row.c[2].v : "";
+            // 2. HAYALET SATIR KONTROLÜ: İsim alanı boşsa kartı oluşturma
+            if (!row.c[0] || !row.c[0].v || row.c[0].v.trim() === "") return;
 
-// Sheet'teki 4. sütunu (index 3) alıyoruz
-let imgUrl = (row.c[3] && row.c[3].v) ? row.c[3].v : "";
+            const name = row.c[0].v;
+            const price = row.c[1] ? row.c[1].v : 0;
+            const desc = row.c[2] ? row.c[2].v : "";
+            let imgUrl = (row.c[3] && row.c[3].v) ? row.c[3].v : "https://placehold.co/300x200/E19F9F/ffffff?text=Nails";
 
-// Eğer hücre boşsa veya link hatalıysa senin verdiğin o resmi varsayılan yapalım
-if (!imgUrl || imgUrl === "") {
-    imgUrl = "https://docs.google.com/spreadsheets/d/{1_rzNiHjjiacM8cIfsc5m777B96M08EW8eDDyaQmKXng}/gviz/tq?tqx=out:json"; // Senin verdiğin o resmin URL'si
-}
+            const safeName = name.replace(/'/g, "\\'");
 
-const safeName = name.replace(/'/g, "\\'");
-
-container.innerHTML += `
-    <div class="card">
-        <img src="${imgUrl}" class="service-img" alt="${name}" onerror="this.src='https://via.placeholder.com/300x200?text=Resim+Bulunamadi'">
-        <h3>${name}</h3>
-        <p style="font-size:0.8rem; margin:10px 0;">${desc}</p>
-        <div class="price">£${price}</div>
-        <button class="btn" onclick="addToCart('${safeName}', ${price})">Add to Cart</button>
-    </div>`;
+            container.innerHTML += `
+                <div class="card">
+                    <img src="${imgUrl}" class="service-img" alt="${name}" 
+                         onerror="this.src='https://placehold.co/300x200/E19F9F/ffffff?text=Image+Not+Found'">
+                    <h3>${name}</h3>
+                    <p style="font-size:0.8rem; height:40px; overflow:hidden; margin:10px 0;">${desc}</p>
+                    <div class="price">£${price}</div>
+                    <button class="btn" onclick="addToCart('${safeName}', ${price})">Add to Cart</button>
+                </div>`;
         });
     } catch (e) {
         console.error("Yükleme hatası:", e);
-        document.getElementById('services-grid').innerHTML = "Hizmetler şu an yüklenemedi. 🛠️";
+        if(document.getElementById('services-grid')) {
+            document.getElementById('services-grid').innerHTML = "Services currently unavailable. 🛠️";
+        }
     }
 }
 
-
-
-
-
-
-// 3. Sepet İşlemleri
+// ==========================================
+// 3. SEPET İŞLEMLERİ (ADD & REMOVE)
+// ==========================================
 function addToCart(name, price) {
     const item = { 
         id: '_' + Math.random().toString(36).substr(2, 9), 
@@ -111,7 +71,6 @@ function removeFromCart(id) {
     updateUI();
 }
 
-// 4. Arayüzü Güncelleme
 function updateUI() {
     const list = document.getElementById('cart-items');
     const totalPriceDisplay = document.getElementById('total-price');
@@ -119,6 +78,8 @@ function updateUI() {
     const hiddenTotal = document.getElementById('hidden-total');
     
     let total = 0;
+
+    if (!list) return;
 
     if (basket.length === 0) {
         list.innerHTML = '<p class="empty-msg">Bag is empty.</p>';
@@ -128,60 +89,86 @@ function updateUI() {
             return `
                 <div class="cart-item">
                     <span>${item.name}</span>
-                    <span>£${item.price} <i class="fas fa-times-circle remove-item" onclick="removeFromCart('${item.id}')"></i></span>
+                    <span>£${item.price} <i class="fas fa-times-circle remove-item" style="cursor:pointer; color:#E19F9F;" onclick="removeFromCart('${item.id}')"></i></span>
                 </div>
             `;
         }).join('');
     }
 
-    totalPriceDisplay.innerText = total;
+    if(totalPriceDisplay) totalPriceDisplay.innerText = total;
     
-    // Formspree üzerinden Sude'ye gidecek gizli alanları dolduruyoruz
+    // Gizli inputları form gönderimi için hazır tut
     if(hiddenServices) hiddenServices.value = basket.map(i => `${i.name} (£${i.price})`).join(", ");
     if(hiddenTotal) hiddenTotal.value = "£" + total;
 }
 
-// 5. Form Gönderimi (Formspree)
+// ==========================================
+// 4. FİNAL FORM GÖNDERİMİ (ImgBB + Formspree)
+// ==========================================
 const orderForm = document.getElementById('nail-form');
+
 if (orderForm) {
     orderForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         if (basket.length === 0) {
-            alert("Please add a service to your bag!");
+            alert("Please add a service to your bag first! 💅");
             return;
         }
 
         const btn = document.getElementById('send-btn');
-        const status = document.getElementById('form-status');
+        const photoInput = document.getElementById('photo');
+        const hiddenPhotoUrl = document.getElementById('hidden-photo-url');
         
-        btn.innerText = "Sending... ✨";
+        btn.innerText = "Processing... 📸";
         btn.disabled = true;
 
         try {
+            // A: Fotoğrafı ImgBB'ye Yükle
+            if (photoInput && photoInput.files[0]) {
+                btn.innerText = "Uploading Photo... 📸";
+                const imgFormData = new FormData();
+                imgFormData.append("image", photoInput.files[0]);
+
+                const imgResponse = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST",
+                    body: imgFormData
+                });
+                const imgResult = await imgResponse.json();
+                
+                if (imgResult.success) {
+                    hiddenPhotoUrl.value = imgResult.data.url;
+                }
+            } else {
+                hiddenPhotoUrl.value = "No photo provided";
+            }
+
+            // B: Formspree'ye Gönder
+            btn.innerText = "Sending Order... ✨";
+            const formData = new FormData(orderForm);
+            const data = Object.fromEntries(formData.entries());
+
             const response = await fetch(orderForm.action, {
                 method: "POST",
-                body: new FormData(orderForm),
-                headers: { 'Accept': 'application/json' }
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
             });
 
             if (response.ok) {
-                status.style.display = "block";
-                status.style.backgroundColor = "#D4EDDA";
-                status.style.color = "#155724";
-                status.innerText = "Order sent to Sude! 💅";
-                
-                basket = [];
+                alert("Order sent to Sude! ✨ Sude will contact you soon.");
+                basket = []; 
                 updateUI();
                 orderForm.reset();
             } else {
-                throw new Error();
+                alert("Submission failed. Please check your form.");
             }
+
         } catch (error) {
-            status.style.display = "block";
-            status.style.backgroundColor = "#F8D7DA";
-            status.style.color = "#721c24";
-            status.innerText = "Error! Please try again.";
+            console.error("System error:", error);
+            alert("An error occurred. Please try again.");
         } finally {
             btn.disabled = false;
             btn.innerText = "Confirm & Send Order ✨";
@@ -189,15 +176,61 @@ if (orderForm) {
     });
 }
 
-// 6. Swiper Başlatma
-new Swiper(".mySwiper", {
-    loop: true,
-    pagination: { el: ".swiper-pagination", clickable: true },
-    autoplay: { delay: 2000, disableOnInteraction: false },
+// ==========================================
+// 5. RESİM ÖNİZLEME (MODAL)
+// ==========================================
+function openModal(imgSrc) {
+    const modal = document.getElementById('imageModal');
+    const fullImg = document.getElementById('fullImage');
+    
+    if (modal && fullImg) {
+        modal.style.display = "flex";
+        fullImg.src = imgSrc;
+        document.body.style.overflow = "hidden"; // Kaydırmayı durdur
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto"; // Kaydırmayı aç
+    }
+}
+
+// Global Tıklama Dinleyicisi (Modal & Resimler)
+document.addEventListener('click', function(e) {
+    // Resim açma
+    if (e.target && e.target.classList.contains('service-img')) {
+        openModal(e.target.src);
+    }
+
+    // Modal kapatma (Çarpı veya Arka Plan)
+    const modal = document.getElementById('imageModal');
+    if (e.target && (e.target.classList.contains('close-modal') || e.target === modal)) {
+        closeModal();
+    }
 });
 
-// 7. Global Erişim Tanımlamaları
-// (HTML içindeki onclick='addToCart(...)' yapıları için gerekli)
+// ESC ile kapatma
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") closeModal();
+});
+
+// ==========================================
+// 6. BAŞLATMA
+// ==========================================
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
-window.onload = loadServices;
+
+window.onload = () => {
+    loadServices();
+    
+    if (typeof Swiper !== 'undefined') {
+        new Swiper(".mySwiper", {
+            loop: true,
+            pagination: { el: ".swiper-pagination", clickable: true },
+            autoplay: { delay: 3000, disableOnInteraction: false },
+        });
+    }
+};
