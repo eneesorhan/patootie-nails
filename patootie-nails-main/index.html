@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patootie Nails | By Sude</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+<header>
+    <a href="#home" class="logo-container">
+        <img src="foto/anaekrangoruntusu.png" alt="Patootie Nails Logo" class="header-logo-img">
+    </a>
+    
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#galeri">Gallery</a>
+        <a href="#hizmetler">Services</a>
+        <a href="#order">Order</a>
+    </nav>
+</header>
+
+<main>
+ 
+        <section id="galeri">
+        <h2>Patootie Nails</h2>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000"></div>
+                <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <section id="hizmetler">
+        <h2>Services</h2>
+        <div id="services-grid" class="services-grid">Loading services...</div>
+    </section>
+
+    <section id="order">
+        <h2>Your Order</h2>
+        <div id="cart-box">
+            <div id="cart-items" class="cart-list">
+                <p class="empty-msg">Bag is empty.</p>
+            </div>
+            
+            <div class="total-section">
+                <span class="total-label">Total:</span>
+                <span class="total-amount">£<span id="total-price">0</span></span>
+            </div>
+
+            <form id="nail-form" action="https://formspree.io/f/xlgwdrkn" method="POST">
+                <div class="input-group">
+                    <label for="photo">Reference Photo (Max 5MB)</label>
+                    <input type="file" id="photo" accept="image/*" class="order-input">
+                </div>
+
+                <div class="input-group">
+                    <label for="instagram">Instagram Username</label>
+                    <input type="text" id="instagram" name="instagram" class="order-input" placeholder="@username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="order-input" placeholder="example@email.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="notes">Special Requests</label>
+                    <textarea id="notes" name="notes" class="order-input" rows="3" placeholder="Shape, length, or extra details..."></textarea>
+                </div>
+                
+                <input type="hidden" name="ordered_services" id="hidden-services">
+                <input type="hidden" name="grand_total" id="hidden-total">
+                <input type="hidden" name="reference_photo_link" id="hidden-photo-url">
+                
+                <button type="submit" id="send-btn" class="btn-submit">Confirm & Send Order ✨</button>
+            </form>
+            <div id="form-status"></div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-logo logo-text">Patootie Nails</div>
+    <div class="social-icons">
+        <a href="https://www.instagram.com/patootie_nails?igsh=MWN3MGNuYW4wcDlkaQ%3D%3D" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@patootie_nails" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="mailto:eneesorhan1@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p style="margin-top: 1rem; opacity: 0.7;">&copy; 2026 Patootie Nails - By Sude</p>
+</footer>
+
+<div id="imageModal" class="image-modal">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="fullImage">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
