@@ -324,6 +324,36 @@ footer {
     color: var(--white);
 }
 
+/* Footer Logo Alanı */
+.footer-logo {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Footer'daki Logo Resmi */
+.footer-logo-img {
+    height: 80px; /* Header'dakinden biraz daha büyük olabilir, daha tok durur */
+    width: auto;
+    border-radius: 15px; /* Logonda köşe varsa yumuşatır */
+    transition: transform 0.3s ease;
+    
+}
+
+.footer-logo-img:hover {
+    transform: scale(1.05); /* Üstüne gelince çok hafif bir tepki */
+}
+
+/* Mobil için footer logosu ayarı */
+@media (max-width: 768px) {
+    .footer-logo-img {
+        height: 60px; /* Mobilde biraz küçülttük */
+    }
+}
+
+
+
 /* ==========================================
    9. MOBİL UYUMLULUK
    ========================================== */
