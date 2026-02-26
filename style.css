@@ -355,19 +355,57 @@ footer {
 
 
 /* ==========================================
-   9. MOBİL UYUMLULUK
+   9. MOBİL UYUMLULUK (GÜNCELLENDİ)
    ========================================== */
 @media (max-width: 768px) {
-    header { padding: 0 5%; }
-    nav a { margin-left: 1rem; font-size: 0.9rem; }
-    .logo-text { font-size: 1.6rem; }
-    h2 { font-size: 2.5rem; }
-    .swiper { height: 350px; }
-    .close-modal { top: 10px; right: 20px; font-size: 45px; }
+    header { 
+        padding: 0 3%; 
+        height: auto; 
+        flex-direction: column; /* Logoyu ve menüyü alt alta koyar */
+        padding-bottom: 10px;
+    }
+    
+    .logo-container {
+        margin-top: 10px;
+    }
+
+    .header-logo-img {
+        height: 45px; 
+    }
+
+    nav { 
+        display: flex !important; /* Gizlemeyi iptal ettik */
+        margin-top: 10px;
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    nav a { 
+        margin-left: 0; 
+        font-size: 0.85rem; 
+    }
+
+    section { 
+        padding-top: 140px; /* Header uzadığı için içeriği aşağı ittik */
+    }
+
+    h2 { font-size: 2.2rem; }
+    
+    .swiper { height: 300px; border-width: 6px; }
+
+    /* Mobilde çarpı butonunu küçültelim ki basması kolay olsun */
+    .close-modal { 
+        top: 15px; 
+        right: 20px; 
+        font-size: 45px; 
+    }
 }
 
-@media (max-width: 600px) {
-    nav { display: none; }
-    section { padding-top: 100px; }
-    .card { max-width: 100%; }
+/* Çok küçük ekranlar için (iPhone SE vb.) */
+@media (max-width: 400px) {
+    nav a {
+        font-size: 0.75rem;
+        gap: 8px;
+    }
 }
